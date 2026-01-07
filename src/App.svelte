@@ -37,7 +37,38 @@
   let saving = false;
 
   function updateValue(id, value) {
-    values = { ...values, [id]: value };
+    // normalize numeric inputs
+    const numericIds = new Set(['STR','DEX','CON','INT','WIS','CHA','STR_mod','DEX_mod','CON_mod','INT_mod','WIS_mod','CHA_mod','level','AC','HP_current','HP_max','proficiency','inspiration','passive_perception']);
+    let v = value;
+    if (numericIds.has(id)) {
+      // allow empty string to clear value
+      v = (v === '' || v === null || v === undefined) ? '' : Number(v);
+      if (Number.isNaN(v)) v = '';
+    }
+
+    const next = { ...values, [id]: v };
+
+    // If an attribute changed, update its modifier
+    const attrs = ['STR','DEX','CON','INT','WIS','CHA'];
+    function calcMod(score) {
+      const n = Number(score) || 0;
+      return Math.floor((n - 10) / 2);
+    }
+
+    if (attrs.includes(id)) {
+      const modId = `${id}_mod`;
+      next[modId] = calcMod(v);
+    }
+
+    // If proficiency or WIS_mod changed, update passive perception
+    const recomputePassive = (id === 'WIS' || id === 'WIS_mod' || id === 'proficiency');
+    if (recomputePassive) {
+      const wisMod = Number(next['WIS_mod'] ?? calcMod(next['WIS']));
+      const prof = Number(next['proficiency'] || 0);
+      next['passive_perception'] = 10 + (Number.isNaN(wisMod) ? 0 : wisMod) + (Number.isNaN(prof) ? 0 : prof);
+    }
+
+    values = next;
   }
 
   async function fetchJSON(url) {
