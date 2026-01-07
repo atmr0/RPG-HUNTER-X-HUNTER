@@ -38,14 +38,15 @@
     {#each items as item, i}
       <div class="item-row">
         {#each cell.itemTemplate || [] as tpl}
+          {@const uid = `${cell.id}-${i}-${tpl.id}`}
           <div class="item-field">
-            <label class="field-label">{tpl.label ?? tpl.id}</label>
+            <label class="field-label" for={uid}>{tpl.label ?? tpl.id}</label>
             {#if tpl.fieldType === 'number'}
-              <input type="number" value={item[tpl.id] ?? ''} on:input={(e) => onFieldChange(i, tpl.id, e.target.value === '' ? '' : Number(e.target.value))} />
+              <input id={uid} type="number" value={item[tpl.id] ?? ''} on:input={(e) => onFieldChange(i, tpl.id, e.target.value === '' ? '' : Number(e.target.value))} />
             {:else if tpl.fieldType === 'textarea'}
-              <textarea on:input={(e) => onFieldChange(i, tpl.id, e.target.value)}>{item[tpl.id] ?? ''}</textarea>
+              <textarea id={uid} on:input={(e) => onFieldChange(i, tpl.id, e.target.value)}>{item[tpl.id] ?? ''}</textarea>
             {:else}
-              <input type="text" value={item[tpl.id] ?? ''} on:input={(e) => onFieldChange(i, tpl.id, e.target.value)} />
+              <input id={uid} type="text" value={item[tpl.id] ?? ''} on:input={(e) => onFieldChange(i, tpl.id, e.target.value)} />
             {/if}
           </div>
         {/each}

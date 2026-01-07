@@ -1,56 +1,67 @@
 {
-  "title": "Ficha - Exemplo de Tipos",
-  "description": "Exemplo contendo um campo de cada tipo: static, image, select, checkbox, button, separator, submatrix, computed e list.",
-  "rows": 6,
-  "cols": 3,
+  "title": "Fronteira - Ficha (exemplo)",
+  "description": "Ficha inspirada no layout da imagem: topo com nome e avatar, caixas de status, 6 características em destaque e lista de perícias.",
+  "rows": 9,
+  "cols": 6,
   "cells": [
+    [ { "type": "static", "text": "CHARACTER SHEET", "colspan": 6 } ],
+
     [
-      { "type": "static", "text": "-- FICHA DE EXEMPLO --", "colspan": 3 }
+      { "type": "field", "id": "char_name", "label": "Nome do Personagem", "fieldType": "text", "colspan": 4 },
+      { "type": "image", "id": "avatar", "src": "", "alt": "Avatar", "colspan": 2 }
     ],
 
     [
-      { "type": "image", "id": "avatar", "src": "https://placekitten.com/128/128", "alt": "Avatar do personagem" },
-      { "type": "select", "id": "classe", "label": "Classe", "options": ["Guerreiro", "Mago", "Ladino"], "value": "Guerreiro" },
-      { "type": "checkbox", "id": "ativo", "label": "Ativo?", "value": true }
+      { "type": "field", "id": "species", "label": "Espécie", "fieldType": "text" },
+      { "type": "field", "id": "career", "label": "Carreira", "fieldType": "text" },
+      { "type": "field", "id": "specializations", "label": "Especializações", "fieldType": "text", "colspan": 4 }
     ],
 
     [
-      { "type": "button", "id": "btn_save", "label": "Salvar (action=save)", "action": "save" },
-      { "type": "separator", "colspan": 2 }
+      { "type": "field", "id": "player", "label": "Jogador", "fieldType": "text", "colspan": 2 },
+      { "type": "separator", "colspan": 4 }
     ],
 
     [
-      {
-        "type": "submatrix",
-        "id": "atributos",
-        "label": "Atributos (submatrix)",
-        "rows": 2,
-        "cols": 3,
-        "colspan": 3,
+      { "type": "submatrix", "id": "resistencia", "label": "Resistência", "rows": 1, "cols": 2, "colspan": 1, "cells": [ [ { "type": "field", "id": "res_limit", "label": "Limite", "fieldType": "number" }, { "type": "field", "id": "res_current", "label": "Atual", "fieldType": "number" } ] ] },
+      { "type": "submatrix", "id": "ferimentos", "label": "Ferimentos", "rows": 1, "cols": 2, "colspan": 1, "cells": [ [ { "type": "field", "id": "wounds_limit", "label": "Limite", "fieldType": "number" }, { "type": "field", "id": "wounds_current", "label": "Atual", "fieldType": "number" } ] ] },
+      { "type": "submatrix", "id": "fadiga", "label": "Fadiga", "rows": 1, "cols": 2, "colspan": 1, "cells": [ [ { "type": "field", "id": "fatigue_limit", "label": "Limite", "fieldType": "number" }, { "type": "field", "id": "fatigue_current", "label": "Atual", "fieldType": "number" } ] ] },
+      { "type": "submatrix", "id": "defesa", "label": "Defesa", "rows": 1, "cols": 2, "colspan": 3, "cells": [ [ { "type": "field", "id": "def_distance", "label": "Distância", "fieldType": "number" }, { "type": "field", "id": "def_melee", "label": "Próximo", "fieldType": "number" } ] ] }
+    ],
+
+    [
+      { "type": "static", "text": "CARACTERÍSTICAS", "colspan": 6 }
+    ],
+
+    [
+      { "type": "submatrix", "id": "attributes", "label": "Atributos", "rows": 2, "cols": 6, "colspan": 6,
         "cells": [
           [
-            { "type": "field", "id": "STR", "label": "STR", "fieldType": "number", "value": 15 },
-            { "type": "field", "id": "DEX", "label": "DEX", "fieldType": "number", "value": 14 },
-            { "type": "field", "id": "CON", "label": "CON", "fieldType": "number", "value": 13 }
+            { "type": "field", "id": "forca_fisica", "label": "Força Física", "fieldType": "number", "value": 10 },
+            { "type": "field", "id": "agilidade", "label": "Agilidade", "fieldType": "number", "value": 10 },
+            { "type": "field", "id": "intelecto", "label": "Intelecto", "fieldType": "number", "value": 10 },
+            { "type": "field", "id": "astucia", "label": "Astúcia", "fieldType": "number", "value": 10 },
+            { "type": "field", "id": "forca_vontade", "label": "Força de Vontade", "fieldType": "number", "value": 10 },
+            { "type": "field", "id": "porte", "label": "Porte", "fieldType": "number", "value": 10 }
           ],
           [
-            { "type": "field", "id": "INT", "label": "INT", "fieldType": "number", "value": 12 },
-            { "type": "field", "id": "WIS", "label": "WIS", "fieldType": "number", "value": 10 },
-            { "type": "field", "id": "CHA", "label": "CHA", "fieldType": "number", "value": 8 }
+            { "type": "computed", "id": "mod_forca_fisica", "label": "Mod", "expr": "Math.floor((forca_fisica-10)/2)" },
+            { "type": "computed", "id": "mod_agilidade", "label": "Mod", "expr": "Math.floor((agilidade-10)/2)" },
+            { "type": "computed", "id": "mod_intelecto", "label": "Mod", "expr": "Math.floor((intelecto-10)/2)" },
+            { "type": "computed", "id": "mod_astucia", "label": "Mod", "expr": "Math.floor((astucia-10)/2)" },
+            { "type": "computed", "id": "mod_forca_vontade", "label": "Mod", "expr": "Math.floor((forca_vontade-10)/2)" },
+            { "type": "computed", "id": "mod_porte", "label": "Mod", "expr": "Math.floor((porte-10)/2)" }
           ]
         ]
       }
     ],
 
     [
-      { "type": "computed", "id": "forca_total", "label": "Força + Destreza (computed)", "expr": "STR + DEX % 10" },
-      { "type": "list", "id": "inventario", "label": "Inventário (lista)", "itemTemplate": [ { "type": "field", "id": "item_name", "label": "Nome" }, { "type": "field", "id": "item_qty", "label": "Qtd", "fieldType": "number" } ], "items": [ { "item_name": "Corrente", "item_qty": 1 }, { "item_name": "Poção Cura", "item_qty": 2 } ], "colspan": 2 }
+      { "type": "static", "text": "PERÍCIAS E HABILIDADES", "colspan": 6 }
     ],
 
     [
-      { "type": "field", "id": "class", "fieldType": "text", "label": "Classe" },
-      { "type": "field", "id": "level", "fieldType": "number", "label": "Nível" },
-      { "type": "field", "id": "race", "fieldType": "text", "label": "Raça" }
+      { "type": "list", "id": "pericias", "label": "Perícias", "itemTemplate": [ { "type": "field", "id": "skill_name", "label": "Perícia", "fieldType": "text" }, { "type": "field", "id": "skill_val", "label": "Valor", "fieldType": "number" } ], "items": [], "colspan": 6 }
     ]
   ]
 }

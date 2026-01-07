@@ -32,14 +32,19 @@
     // find identifiers (variables)
     const ids = s.match(/\b[A-Za-z_][A-Za-z0-9_]*\b/g) || [];
     const uniq = [...new Set(ids)];
+    // allowed function patterns we will permit (keep names intact)
+    const allowedFuncs = ['Math', 'floor', 'ceil', 'round', 'abs'];
     for (const id of uniq) {
+      if (allowedFuncs.includes(id)) continue; // don't replace function names
       // replace identifier with numeric value (or 0)
       const raw = values[id];
       const num = raw === undefined || raw === null || raw === '' ? 0 : Number(raw);
       s = s.replace(new RegExp('\\b' + id + '\\b', 'g'), String(isNaN(num) ? 0 : num));
     }
-    // allow only numbers, operators, dots, parentheses and spaces
-    if (!/^[-+*\/()%.\d\s]+$/.test(s)) return null;
+    // after replacing variables, allow only numbers, operators, dots, parentheses, commas and allowed Math functions
+    // temporarily remove allowed Math.function occurrences to check for stray letters
+    const tmp = s.replace(/Math\.(floor|ceil|round|abs)\(/g, '');
+    if (/[A-Za-z]/.test(tmp)) return null;
     try {
       // eslint-disable-next-line no-new-func
       const fn = new Function('return (' + s + ')');
