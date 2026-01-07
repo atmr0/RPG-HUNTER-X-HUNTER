@@ -11,6 +11,10 @@
   let sheet = null;
   let values = {};
 
+  function updateValue(id, value) {
+    values = { ...values, [id]: value };
+  }
+
   async function fetchJSON(url) {
     const res = await fetch(url);
     if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
@@ -72,7 +76,7 @@
     {#if sheet}
       <section class="sheet">
         <h2>{sheet.id}</h2>
-        <RenderGrid {sheet} {values} />
+        <RenderGrid {sheet} {values} on:change={e => updateValue(e.detail.id, e.detail.value)} />
       </section>
     {/if}
   {/if}

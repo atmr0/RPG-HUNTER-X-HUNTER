@@ -1,41 +1,49 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
   export let sheet;
   export let values = {};
+  const dispatch = createEventDispatcher();
 
   function getCellValue(id) {
     return values[id] ?? '';
+  }
+
+  function emitChange(id, rawValue, fieldType) {
+    const value = fieldType === 'number' ? (rawValue === '' ? '' : Number(rawValue)) : rawValue;
+    dispatch('change', { id, value });
   }
 </script>
 
 {#if sheet}
   <div class="grid" style="grid-template-columns: repeat({sheet.cols}, 1fr);">
-    {#each sheet.cells as row}
-      {#each row as cell}
+    {#each sheet.cells as row, rindex}
+      {#each row as cell, cindex}
         {#if cell}
           <div class="cell" style="grid-column: span {cell.colspan ?? 1}; grid-row: span {cell.rowspan ?? 1};">
             {#if cell.type === 'field'}
-              <label class="field-label">{cell.id}</label>
+              {@const id = `field-${cell.id}-${rindex}-${cindex}`}
+              <label class="field-label" for={id}>{cell.id}</label>
               {#if cell.fieldType === 'textarea'}
-                <textarea readonly rows="4">{getCellValue(cell.id)}</textarea>
+                <textarea id={id} rows="4" bind:value={values[cell.id]} on:input={(e) => emitChange(cell.id, e.target.value, 'textarea')}></textarea>
               {:else}
-                <input readonly type={cell.fieldType === 'number' ? 'number' : 'text'} value={getCellValue(cell.id)} />
+                <input id={id} type={cell.fieldType === 'number' ? 'number' : 'text'} value={getCellValue(cell.id)} on:input={(e) => emitChange(cell.id, e.target.value, cell.fieldType)} />
               {/if}
             {:else if cell.type === 'submatrix'}
               <div class="submatrix">
                 <div class="grid" style="grid-template-columns: repeat({cell.cols}, 1fr);">
-                  {#each cell.cells as subrow}
-                    {#each subrow as subcell}
+                  {#each cell.cells as subrow, srindex}
+                    {#each subrow as subcell, scindex}
                       {#if subcell}
                         <div class="cell sub" style="grid-column: span {subcell.colspan ?? 1}; grid-row: span {subcell.rowspan ?? 1};">
                           {#if subcell.type === 'field'}
-                            <label class="field-label">{subcell.id}</label>
+                            {@const sid = `field-${subcell.id}-${rindex}-${cindex}-${srindex}-${scindex}`}
+                            <label class="field-label" for={sid}>{subcell.id}</label>
                             {#if subcell.fieldType === 'textarea'}
-                              <textarea readonly rows="3">{getCellValue(subcell.id)}</textarea>
+                              <textarea id={sid} rows="3" bind:value={values[subcell.id]} on:input={(e) => emitChange(subcell.id, e.target.value, 'textarea')}></textarea>
                             {:else}
-                              <input readonly type={subcell.fieldType === 'number' ? 'number' : 'text'} value={getCellValue(subcell.id)} />
+                              <input id={sid} type={subcell.fieldType === 'number' ? 'number' : 'text'} value={getCellValue(subcell.id)} on:input={(e) => emitChange(subcell.id, e.target.value, subcell.fieldType)} />
                             {/if}
                           {:else}
-                            <!-- nested submatrices beyond one level are rendered as plain blocks -->
                             <div>Submatrix</div>
                           {/if}
                         </div>
