@@ -19,7 +19,9 @@
 </script>
 
 <div class="submatrix-root">
+    {#if cell.label}
   <div class="submatrix-label">{cell.label}</div>
+  {/if}
   {#if cell.id === 'attributes'}
     <div class="attributes-grid">
       {#each cell.cells[0] as attr, aindex}

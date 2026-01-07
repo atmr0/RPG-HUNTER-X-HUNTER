@@ -40,7 +40,9 @@
         {#each cell.itemTemplate || [] as tpl}
           {@const uid = `${cell.id}-${i}-${tpl.id}`}
           <div class="item-field">
-            <label class="field-label" for={uid}>{tpl.label ?? tpl.id}</label>
+            {#if tpl.label}
+              <label class="field-label" for={uid}>{tpl.label}</label>
+            {/if}
             {#if tpl.fieldType === 'number'}
               <input id={uid} type="number" value={item[tpl.id] ?? ''} on:input={(e) => onFieldChange(i, tpl.id, e.target.value === '' ? '' : Number(e.target.value))} />
             {:else if tpl.fieldType === 'textarea'}

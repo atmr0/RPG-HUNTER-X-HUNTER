@@ -26,7 +26,9 @@
 </script>
 
 <div class="attr-block-root" style="--color-attributeFocus: {computedFocus}">
-  <div class="attr-label">{attr.label}</div>
+  {#if attr && attr.label}
+    <div class="attr-label">{attr.label}</div>
+  {/if}
   <div class="big-value">
     <input id={uid} class="attr-input" type="number" value={value ?? ''} on:input={onInput} />
   </div>

@@ -14,10 +14,14 @@
 </script>
 
 <div class="checkbox-root">
-  <label for={uid}>
+  {#if cell.label}
+    <label for={uid}>
+      <input id={uid} type="checkbox" checked={checked} on:change={onChange} />
+      <span>{cell.label}</span>
+    </label>
+  {:else}
     <input id={uid} type="checkbox" checked={checked} on:change={onChange} />
-    <span>{cell.label ?? cell.id}</span>
-  </label>
+  {/if}
 </div>
 
 <style>

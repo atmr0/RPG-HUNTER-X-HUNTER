@@ -6,7 +6,9 @@
 </script>
 
 <div class="computed-root">
-  <label class="field-label" for={uid}>{label ?? id}</label>
+  {#if label}
+    <label class="field-label" for={uid}>{label}</label>
+  {/if}
   <input id={uid} readonly type="text" value={value ?? ''} />
 </div>
 

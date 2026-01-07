@@ -17,7 +17,9 @@
 </script>
 
 <div class="field-root">
-  <label class="field-label" for={uid}>{cell.label ?? cell.id}</label>
+  {#if cell.label}
+    <label class="field-label" for={uid}>{cell.label}</label>
+  {/if}
   {#if cell.fieldType === 'textarea'}
     <textarea id={uid} rows="3" on:input={onInput}>{getValue()}</textarea>
   {:else}

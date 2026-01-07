@@ -1,7 +1,7 @@
 // Visual theme constants for components
 export const COLORS = {
-  cellBackground: "#f8f8f8",
-  cellBorder: "#e0e0e0",
+  cellBackground: "transparent", 
+  cellBorder: "transparent", 
   background: "#ffffff",
   primary: "#1f6feb",
   secondary: "#ff8c42",
