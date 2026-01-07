@@ -1,5 +1,11 @@
 <script>
   import { createEventDispatcher } from 'svelte';
+  import Field from './components/Field.svelte';
+  import Computed from './components/Computed.svelte';
+  import Submatrix from './components/Submatrix.svelte';
+  import Static from './components/Static.svelte';
+  import Image from './components/Image.svelte';
+
   export let sheet;
   export let values = {};
   const dispatch = createEventDispatcher();
@@ -75,45 +81,17 @@
         {#if cell}
           <div class="cell" style="grid-column: span {cell.colspan ?? 1}; grid-row: span {cell.rowspan ?? 1};">
             {#if cell.type === 'field'}
-              {@const id = `field-${cell.id}-${rindex}-${cindex}`}
-              <label class="field-label" for={id}>{cell.id}</label>
-              {#if cell.fieldType === 'textarea'}
-                <textarea id={id} rows="4" bind:value={values[cell.id]} on:input={(e) => emitChange(cell.id, e.target.value, 'textarea')}></textarea>
-              {:else}
-                <input id={id} type={cell.fieldType === 'number' ? 'number' : 'text'} value={getCellValue(cell.id)} on:input={(e) => emitChange(cell.id, e.target.value, cell.fieldType)} />
-              {/if}
+              <Field {cell} {values} on:change={(e) => dispatch('change', e.detail)} />
             {:else if cell.type === 'computed'}
-              {@const cid = `computed-${cell.id}-${rindex}-${cindex}`}
-              <label class="field-label" for={cid}>{cell.label ?? cell.id}</label>
-              <input id={cid} readonly type="text" value={computed[cell.id] ?? ''} />
+              <Computed id={cell.id} label={cell.label} value={computed[cell.id]} />
             {:else if cell.type === 'submatrix'}
-              <div class="submatrix">
-                <div class="grid" style="grid-template-columns: repeat({cell.cols}, 1fr);">
-                  {#each cell.cells as subrow, srindex}
-                    {#each subrow as subcell, scindex}
-                      {#if subcell}
-                        <div class="cell sub" style="grid-column: span {subcell.colspan ?? 1}; grid-row: span {subcell.rowspan ?? 1};">
-                          {#if subcell.type === 'field'}
-                            {@const sid = `field-${subcell.id}-${rindex}-${cindex}-${srindex}-${scindex}`}
-                            <label class="field-label" for={sid}>{subcell.id}</label>
-                            {#if subcell.fieldType === 'textarea'}
-                              <textarea id={sid} rows="3" bind:value={values[subcell.id]} on:input={(e) => emitChange(subcell.id, e.target.value, 'textarea')}></textarea>
-                            {:else}
-                              <input id={sid} type={subcell.fieldType === 'number' ? 'number' : 'text'} value={getCellValue(subcell.id)} on:input={(e) => emitChange(subcell.id, e.target.value, subcell.fieldType)} />
-                            {/if}
-                          {:else if subcell.type === 'computed'}
-                            {@const scid = `computed-${subcell.id}-${rindex}-${cindex}-${srindex}-${scindex}`}
-                            <label class="field-label" for={scid}>{subcell.label ?? subcell.id}</label>
-                            <input id={scid} readonly type="text" value={computed[subcell.id] ?? ''} />
-                          {:else}
-                            <div>Submatrix</div>
-                          {/if}
-                        </div>
-                      {/if}
-                    {/each}
-                  {/each}
-                </div>
-              </div>
+              <Submatrix {cell} {values} {computed} on:change={(e) => dispatch('change', e.detail)} />
+            {:else if cell.type === 'static'}
+              <Static text={cell.text} />
+            {:else if cell.type === 'image'}
+              <Image src={cell.src} alt={cell.alt} />
+            {:else}
+              <div>Tipo não suportado: {cell.type}</div>
             {/if}
           </div>
         {/if}
@@ -125,8 +103,5 @@
 <style>
   .grid { display: grid; gap: 8px; }
   .cell { background:#f8f8f8; padding:8px; border:1px solid #e0e0e0; }
-  .field-label { font-size:12px; color:#444 }
-  input, textarea { width:100%; box-sizing:border-box }
-  .submatrix { padding:4px; background:#fff }
-  .cell.sub { background:#fffbe6 }
+  /* styles for generic grid and cell only; field-specific styles moved to components */
 </style>
