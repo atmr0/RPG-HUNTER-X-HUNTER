@@ -99,7 +99,7 @@
               {:else if cell.type === 'static'}
                 <Static text={cell.text} />
               {:else if cell.type === 'image'}
-                <Image src={cell.src} alt={cell.alt} />
+                <Image id={cell.id} src={values[cell.id] ?? cell.src} alt={cell.alt} on:change={(e) => dispatch('change', e.detail)} />
               {:else if cell.type === 'checkbox'}
                 <Checkbox cell={cell} {values} on:change={(e) => dispatch('change', e.detail)} />
               {:else if cell.type === 'select'}
@@ -122,5 +122,8 @@
 <style>
   .grid { display: grid; gap: 8px; }
   .cell { background:var(--color-cellBackground); padding:8px; border:1px solid var(--color-cellBorder); }
+    .grid { display: flex; flex-direction: column; gap: 8px; }
+    .grid-row { display: grid; gap: 8px; }
+    .cell { background:var(--color-surface, #f8f8f8); padding:8px; border:1px solid var(--color-border, #e0e0e0); }
   /* styles for generic grid and cell only; field-specific styles moved to components */
 </style>
