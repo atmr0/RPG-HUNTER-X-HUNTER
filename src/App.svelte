@@ -4,8 +4,19 @@
   // Import local JSON bundles so the bundler includes them in the output.
   // These imports will be inlined when we build the single-file HTML.
   import usersBundle from '../users.json';
-  import sheetBundle from '../sheets/sheet1.json';
-  import dataAnaBundle from '../data/ana_sheet1.json';
+  import sheetBundle from '../sheets/Ficha.json';
+  import { SHEET_BASE, GIT_OWNER, GIT_REPO, GIT_BRANCH, GIT_TOKEN } from './config.js';
+  // import all JSON files under `src/data` automatically (included in the bundle)
+  const _dataModules = import.meta.glob('../data/*.json', { eager: true, as: 'json' });
+  const dataBundles = {};
+  for (const p in _dataModules) {
+    const d = _dataModules[p];
+    if (d && d.username && d.sheetId) {
+      dataBundles[`${d.username}_${d.sheetId}`] = d;
+    }
+  }
+
+  // SHEET_BASE is imported from src/config.js
 
   let baseUrl = './';
   let username = '';
@@ -18,10 +29,10 @@
 
   // GitHub settings for client-side commits (user-provided PAT).
   // Stored in sessionStorage so the user can enter once per browser session.
-  let gitOwner = sessionStorage.getItem('gitOwner') || 'atmr0';
-  let gitRepo = sessionStorage.getItem('gitRepo') || 'RPG-HUNTER-X-HUNTER';
-  let gitBranch = sessionStorage.getItem('gitBranch') || 'gh-pages';
-  let gitToken = sessionStorage.getItem('gitToken') || '';
+  let gitOwner = sessionStorage.getItem('gitOwner') || GIT_OWNER;
+  let gitRepo = sessionStorage.getItem('gitRepo') || GIT_REPO;
+  let gitBranch = sessionStorage.getItem('gitBranch') || GIT_BRANCH;
+  let gitToken = sessionStorage.getItem('gitToken') || GIT_TOKEN;
 
   let saving = false;
 
@@ -44,10 +55,11 @@
       if (!found) { error = 'Credenciais inválidas'; return; }
       logged = true;
       currentUser = found.username;
-      sheet = sheetBundle ?? await fetchJSON(`${baseUrl}sheets/sheet1.json`);
-      // Prefer imported data bundle when it matches the current user/sheet
-      if (dataAnaBundle && dataAnaBundle.username === currentUser && dataAnaBundle.sheetId === sheet.id) {
-        values = dataAnaBundle.values || {};
+      sheet = sheetBundle ?? await fetchJSON(`${baseUrl}${SHEET_BASE}`);
+      // Prefer any imported data bundle (auto-loaded from src/data) when it matches the current user/sheet
+      const key = `${currentUser}_${sheet.id}`;
+      if (dataBundles[key]) {
+        values = dataBundles[key].values || {};
       } else {
         try {
           const data = await fetchJSON(`${baseUrl}data/${currentUser}_${sheet.id}.json`);
@@ -116,6 +128,20 @@
       saving = false;
     }
   }
+
+  function exportToFile() {
+    if (!currentUser || !sheet) return alert('Usuário/Sheet não definidos');
+    const contentObj = { username: currentUser, sheetId: sheet.id, values };
+    const blob = new Blob([JSON.stringify(contentObj, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${currentUser}_${sheet.id}.json`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
 </script>
 
 <main>
@@ -154,7 +180,8 @@
     <section class="toolbar">
       <div>Logado como <strong>{currentUser}</strong></div>
       <button on:click={logout}>Sair</button>
-        <button on:click={saveToRepo} disabled={!sheet || saving} class="save">{saving ? 'Salvando...' : 'Salvar'}</button>
+      <button on:click={saveToRepo} disabled={!sheet || saving} class="save">{saving ? 'Salvando...' : 'Salvar'}</button>
+      <button on:click={exportToFile} disabled={!sheet}>Exportar</button>
     </section>
     {#if sheet}
       <section class="sheet">
