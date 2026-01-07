@@ -5,6 +5,10 @@
   import Submatrix from './components/Submatrix.svelte';
   import Static from './components/Static.svelte';
   import Image from './components/Image.svelte';
+  import Checkbox from './components/Checkbox.svelte';
+  import Select from './components/Select.svelte';
+  import Separator from './components/Separator.svelte';
+  import List from './components/List.svelte';
 
   export let sheet;
   export let values = {};
@@ -90,6 +94,14 @@
               <Static text={cell.text} />
             {:else if cell.type === 'image'}
               <Image src={cell.src} alt={cell.alt} />
+            {:else if cell.type === 'checkbox'}
+              <Checkbox cell={cell} {values} on:change={(e) => dispatch('change', e.detail)} />
+            {:else if cell.type === 'select'}
+              <Select cell={cell} {values} on:change={(e) => dispatch('change', e.detail)} />
+            {:else if cell.type === 'separator'}
+              <Separator colspan={cell.colspan ?? 1} />
+            {:else if cell.type === 'list'}
+              <List cell={cell} {values} on:change={(e) => dispatch('change', e.detail)} />
             {:else}
               <div>Tipo não suportado: {cell.type}</div>
             {/if}

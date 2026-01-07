@@ -1,6 +1,10 @@
 <script>
   import Field from './Field.svelte';
   import Computed from './Computed.svelte';
+  import Checkbox from './Checkbox.svelte';
+  import Select from './Select.svelte';
+  import Separator from './Separator.svelte';
+  import List from './List.svelte';
   import { createEventDispatcher } from 'svelte';
 
   export let cell;
@@ -24,6 +28,14 @@
               <Field cell={subcell} {values} on:change={onChildChange} />
             {:else if subcell.type === 'computed'}
               <Computed id={subcell.id} label={subcell.label} value={computed[subcell.id]} />
+            {:else if subcell.type === 'checkbox'}
+              <Checkbox cell={subcell} {values} on:change={onChildChange} />
+            {:else if subcell.type === 'select'}
+              <Select cell={subcell} {values} on:change={onChildChange} />
+            {:else if subcell.type === 'separator'}
+              <Separator colspan={subcell.colspan ?? 1} />
+            {:else if subcell.type === 'list'}
+              <List cell={subcell} {values} on:change={onChildChange} />
             {:else}
               <div>Tipo não suportado</div>
             {/if}
@@ -35,7 +47,7 @@
 </div>
 
 <style>
-  .submatrix-root { padding:4px; background:#fff }
+  .submatrix-root { padding:4px; }
   .submatrix-label { font-weight:600; margin-bottom:6px }
   .grid { display:grid; gap:6px }
   .cell.sub { background:#fffbe6; padding:6px; border:1px solid #eee }
