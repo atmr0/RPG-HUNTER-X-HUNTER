@@ -1,6 +1,11 @@
 <script>
   import { onMount } from 'svelte';
   import RenderGrid from './RenderGrid.svelte';
+  // Import local JSON bundles so the bundler includes them in the output.
+  // These imports will be inlined when we build the single-file HTML.
+  import usersBundle from '../users.json';
+  import sheetBundle from '../sheets/sheet1.json';
+  import dataAnaBundle from '../data/ana_sheet1.json';
 
   let baseUrl = './';
   let username = '';
@@ -25,17 +30,22 @@
     error = '';
     try {
       const usersUrl = `${baseUrl}users.json`;
-      const usersJson = await fetchJSON(usersUrl);
+      const usersJson = usersBundle ?? await fetchJSON(usersUrl);
       const found = (usersJson.users || []).find(u => u.username === username && u.password === password);
       if (!found) { error = 'Credenciais inválidas'; return; }
       logged = true;
       currentUser = found.username;
-      sheet = await fetchJSON(`${baseUrl}sheets/sheet1.json`);
-      try {
-        const data = await fetchJSON(`${baseUrl}data/${currentUser}_${sheet.id}.json`);
-        values = data.values || {};
-      } catch (e) {
-        values = {};
+      sheet = sheetBundle ?? await fetchJSON(`${baseUrl}sheets/sheet1.json`);
+      // Prefer imported data bundle when it matches the current user/sheet
+      if (dataAnaBundle && dataAnaBundle.username === currentUser && dataAnaBundle.sheetId === sheet.id) {
+        values = dataAnaBundle.values || {};
+      } else {
+        try {
+          const data = await fetchJSON(`${baseUrl}data/${currentUser}_${sheet.id}.json`);
+          values = data.values || {};
+        } catch (e) {
+          values = {};
+        }
       }
     } catch (e) {
       error = e.message;

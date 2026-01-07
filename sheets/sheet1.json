@@ -5,13 +5,29 @@
   "cells": [
     [
       { "type": "field", "id": "nome", "fieldType": "text", "colspan": 2 },
-      { "type": "submatrix", "rows": 2, "cols": 2, "cells": [
-        [ { "type": "field", "id": "s1", "fieldType": "number" }, { "type": "field", "id": "s2", "fieldType": "number" } ],
-        [ { "type": "field", "id": "s3", "fieldType": "text" }, { "type": "field", "id": "s4", "fieldType": "text" } ]
-      ] }
+      {
+        "type": "submatrix",
+        "rows": 2,
+        "cols": 2,
+        "cells": [
+          [
+            { "type": "field", "id": "s1", "fieldType": "number" },
+            { "type": "field", "id": "s2", "fieldType": "number" }
+          ],
+          [
+            { "type": "field", "id": "s3", "fieldType": "text" },
+            { "type": "field", "id": "s4", "fieldType": "text" }
+          ]
+        ]
+      }
     ],
     [
-      { "type": "field", "id": "descricao", "fieldType": "textarea", "colspan": 3 },
+      {
+        "type": "field",
+        "id": "descricao",
+        "fieldType": "textarea",
+        "colspan": 3
+      },
       null,
       null
     ]
