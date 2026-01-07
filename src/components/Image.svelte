@@ -3,6 +3,7 @@
   export let src = '';
   export let alt = '';
   export let id = '';
+  export let cell = {};
   const dispatch = createEventDispatcher();
 
   let preview = src;
@@ -23,7 +24,7 @@
   }
 </script>
 
-<div class="img-root">
+<div class="img-root" style="background: {cell?.style?.background ?? 'transparent'}; border-color: {cell?.style?.borderColor ?? 'inherit'}">
   {#if preview}
     <img src={preview} alt={alt} />
   {:else}

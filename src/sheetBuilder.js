@@ -51,6 +51,36 @@ export class SheetBuilder {
     return new CellBuilder('list', base);
   }
 
+  // convenience to create a row of attributes + computed modifiers
+  // attrs: array of strings or { id, label, value, fieldType }
+  // opts: { id, label, colspan, modPrefix, modLabel }
+  characterAttributes(attrs, opts = {}) {
+    const list = Array.isArray(attrs) ? attrs : [];
+    const cols = list.length || 1;
+    const cells = [[], []];
+    for (const a of list) {
+      const item = typeof a === 'string' ? { id: a } : (a || {});
+      const id = item.id;
+      const label = item.label || id;
+      const val = item.value;
+      const ftype = item.fieldType || 'number';
+      cells[0].push(this.field(id).fieldType(ftype).label(label).value(val));
+      const modId = (opts.modPrefix || 'mod_') + id;
+      const modLabel = opts.modLabel || 'Mod';
+      const expr = `Math.floor((${id}-10)/2)`;
+      cells[1].push(this.computed(modId).label(modLabel).expr(expr));
+    }
+    const base = {
+      id: opts.id || 'attributes',
+      label: opts.label || '',
+      rows: 2,
+      cols,
+      colspan: opts.colspan || cols,
+      cells
+    };
+    return this.submatrix(base);
+  }
+
   checkbox(opts) { const base = (typeof opts === 'string') ? { id: opts } : (opts || {}); return new CellBuilder('checkbox', base); }
   select(opts) { const base = (typeof opts === 'string') ? { id: opts } : (opts || {}); return new CellBuilder('select', base); }
 

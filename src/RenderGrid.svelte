@@ -105,8 +105,7 @@
           {#if cell}
             <div
               class="cell"
-              style="grid-column: span {cell.colspan ??
-                1}; grid-row: span {cell.rowspan ?? 1};"
+              style="grid-column: span {cell.colspan ?? 1}; grid-row: span {cell.rowspan ?? 1}; background: {cell.style?.background ?? 'var(--color-cellBackground)'}; border-color: {cell.style?.borderColor ?? 'var(--color-cellBorder)'}"
             >
               {#if cell.type === "field"}
                 <Field
@@ -116,6 +115,7 @@
                 />
               {:else if cell.type === "computed"}
                 <Computed
+                  {cell}
                   id={cell.id}
                   label={cell.label}
                   value={computed[cell.id]}
@@ -128,9 +128,10 @@
                   on:change={(e) => dispatch("change", e.detail)}
                 />
               {:else if cell.type === "static"}
-                <Static text={cell.text} />
+                <Static cell={cell} text={cell.text} />
               {:else if cell.type === "image"}
                 <Image
+                  cell={cell}
                   id={cell.id}
                   src={values[cell.id] ?? cell.src}
                   alt={cell.alt}
