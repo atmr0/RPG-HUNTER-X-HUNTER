@@ -6,7 +6,23 @@
   // Import local JSON bundles so the bundler includes them in the output.
   // These imports will be inlined when we build the single-file HTML.
   import usersBundle from '../users.json';
-  import sheetBundle from '../sheets/Ficha.json';
+  // Prefer a builder file when available. Try dynamic import of sheets/Ficha.builder.js
+  // and fall back to sheets/Ficha.json. This runs immediately so sheetBundle is
+  // available before the user logs in (most cases).
+  let sheetBundle = null;
+  (async () => {
+    try {
+      const mod = await import('../sheets/Ficha.builder.js');
+      sheetBundle = mod && (mod.default ?? mod);
+    } catch (e) {
+      try {
+        const mod = await import('../sheets/Ficha.json');
+        sheetBundle = mod && (mod.default ?? mod);
+      } catch (e2) {
+        sheetBundle = null;
+      }
+    }
+  })();
   import { SHEET_BASE, GIT_OWNER, GIT_REPO, GIT_BRANCH, GIT_TOKEN } from './config.js';
   // import all JSON files under `src/data` automatically (included in the bundle)
   const _dataModules = import.meta.glob('../data/*.json', { eager: true, as: 'json' });

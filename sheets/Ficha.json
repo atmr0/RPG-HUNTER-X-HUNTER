@@ -5,16 +5,27 @@
   "rows": 90,
   "cols": 6,
   "cells": [
-    [{ "type": "static", "text": "CHARACTER SHEET", "colspan": 6 }],
     [
-      { "type": "field", "id": "nome_jogador", "label": "Nome do Jogador", "fieldType": "text", "colspan": 2 }
+      { "type": "field", "id": "nome_jogador", "label": "Nome do Jogador", "fieldType": "text", "colspan": 1 }
     ],
     [
-      { "type": "field", "id": "nome_personagem", "label": "Nome do Personagem", "fieldType": "text", "colspan": 4 },
-      {"type": "image", "id": "avatar", "label": "Avatar", "width": 100, "height": 100}
+      {"type": "submatrix", "id": "info_header", "label": "Informações do Personagem", "rows": 1, "cols": 6, "colspan": 6,
+       "cells": [
+         [
+           { "type": "field", "id": "idade", "label": "Idade", "fieldType": "number" },
+           { "type": "field", "id": "genero", "label": "Gênero", "fieldType": "text" },
+           { "type": "field", "id": "raca", "label": "Raça", "fieldType": "text" },
+           { "type": "field", "id": "classe", "label": "Classe", "fieldType": "text" },
+           { "type": "field", "id": "nivel", "label": "Nível", "fieldType": "number" },
+           { "type": "field", "id": "experiencia", "label": "Experiência", "fieldType": "number" }
+         ]
+       ]
+      },
+      { "type": "field", "id": "nome_personagem", "label": "Nome do Personagem", "fieldType": "text", "colspan": 5 },
+      {"type": "image", "id": "avatar", "label": "Avatar", "width": 100, "height": 100,"colspan": 1 }
     ],
 
-    [{ "type": "static", "text": "CARACTERÍSTICAS", "colspan": 2 }],
+    [{ "type": "static", "text": "CARACTERÍSTICAS", "colspan": 6 }],
 
     [
       {

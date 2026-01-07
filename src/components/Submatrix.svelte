@@ -59,7 +59,7 @@
   .submatrix-root { padding:4px; }
   .submatrix-label { font-weight:600; margin-bottom:6px }
   .grid { display:grid; gap:6px }
-  .cell.sub { background:#fffbe6; padding:6px; border:1px solid #eee }
+  .cell.sub { background:#eaeaea; padding:6px; border:1px solid #eee }
 
   /* attributes container */
   .attributes-grid { display:grid; grid-template-columns: repeat(6,1fr); gap:10px; align-items:center }
