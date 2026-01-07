@@ -1,6 +1,8 @@
 <script>
   import { onMount } from 'svelte';
   import RenderGrid from './RenderGrid.svelte';
+  import { applyTheme } from './components/theme.js';
+  if (typeof document !== 'undefined') applyTheme();
   // Import local JSON bundles so the bundler includes them in the output.
   // These imports will be inlined when we build the single-file HTML.
   import usersBundle from '../users.json';
@@ -173,6 +175,7 @@
     a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
+  onMount(() => applyTheme());
 </script>
 
 <main>

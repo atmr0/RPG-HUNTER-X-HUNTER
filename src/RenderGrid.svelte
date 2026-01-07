@@ -84,41 +84,43 @@
 </script>
 
 {#if sheet}
-  <div class="grid" style="grid-template-columns: repeat({sheet.cols}, 1fr);">
+  <div class="grid">
     {#each sheet.cells as row, rindex}
-      {#each row as cell, cindex}
-        {#if cell}
-          <div class="cell" style="grid-column: span {cell.colspan ?? 1}; grid-row: span {cell.rowspan ?? 1};">
-            {#if cell.type === 'field'}
-              <Field {cell} {values} on:change={(e) => dispatch('change', e.detail)} />
-            {:else if cell.type === 'computed'}
-              <Computed id={cell.id} label={cell.label} value={computed[cell.id]} />
-            {:else if cell.type === 'submatrix'}
-              <Submatrix {cell} {values} {computed} on:change={(e) => dispatch('change', e.detail)} />
-            {:else if cell.type === 'static'}
-              <Static text={cell.text} />
-            {:else if cell.type === 'image'}
-              <Image src={cell.src} alt={cell.alt} />
-            {:else if cell.type === 'checkbox'}
-              <Checkbox cell={cell} {values} on:change={(e) => dispatch('change', e.detail)} />
-            {:else if cell.type === 'select'}
-              <Select cell={cell} {values} on:change={(e) => dispatch('change', e.detail)} />
-            {:else if cell.type === 'separator'}
-              <Separator colspan={cell.colspan ?? 1} />
-            {:else if cell.type === 'list'}
-              <List cell={cell} {values} on:change={(e) => dispatch('change', e.detail)} />
-            {:else}
-              <div>Tipo não suportado: {cell.type}</div>
-            {/if}
-          </div>
-        {/if}
-      {/each}
+      <div class="grid-row" style="grid-template-columns: repeat({sheet.cols}, 1fr);">
+        {#each row as cell, cindex}
+          {#if cell}
+            <div class="cell" style="grid-column: span {cell.colspan ?? 1}; grid-row: span {cell.rowspan ?? 1};">
+              {#if cell.type === 'field'}
+                <Field {cell} {values} on:change={(e) => dispatch('change', e.detail)} />
+              {:else if cell.type === 'computed'}
+                <Computed id={cell.id} label={cell.label} value={computed[cell.id]} />
+              {:else if cell.type === 'submatrix'}
+                <Submatrix {cell} {values} {computed} on:change={(e) => dispatch('change', e.detail)} />
+              {:else if cell.type === 'static'}
+                <Static text={cell.text} />
+              {:else if cell.type === 'image'}
+                <Image src={cell.src} alt={cell.alt} />
+              {:else if cell.type === 'checkbox'}
+                <Checkbox cell={cell} {values} on:change={(e) => dispatch('change', e.detail)} />
+              {:else if cell.type === 'select'}
+                <Select cell={cell} {values} on:change={(e) => dispatch('change', e.detail)} />
+              {:else if cell.type === 'separator'}
+                <Separator colspan={cell.colspan ?? 1} />
+              {:else if cell.type === 'list'}
+                <List cell={cell} {values} on:change={(e) => dispatch('change', e.detail)} />
+              {:else}
+                <div>Tipo não suportado: {cell.type}</div>
+              {/if}
+            </div>
+          {/if}
+        {/each}
+      </div>
     {/each}
   </div>
 {/if}
 
 <style>
   .grid { display: grid; gap: 8px; }
-  .cell { background:#f8f8f8; padding:8px; border:1px solid #e0e0e0; }
+  .cell { background:var(--color-cellBackground); padding:8px; border:1px solid var(--color-cellBorder); }
   /* styles for generic grid and cell only; field-specific styles moved to components */
 </style>

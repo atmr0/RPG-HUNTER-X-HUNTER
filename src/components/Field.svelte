@@ -26,7 +26,14 @@
 </div>
 
 <style>
-  .field-root { display:flex; flex-direction:column }
-  .field-label { font-size:12px; color:#444; margin-bottom:4px }
-  input, textarea { width:100%; box-sizing:border-box }
+  .field-root { display:flex; flex-direction:column; font-family: var(--font-base); }
+  .field-label { font-size: var(--font-small); color: var(--color-muted); margin-bottom:4px }
+  input, textarea {
+    width:100%; box-sizing:border-box;
+    padding: var(--input-padding);
+    border: var(--input-borderWidth) solid var(--input-borderColor);
+    border-radius: var(--radius-small);
+    background: var(--color-background);
+    color: var(--color-text);
+  }
 </style>

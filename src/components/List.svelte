@@ -50,21 +50,30 @@
             {/if}
           </div>
         {/each}
-        <button type="button" on:click={() => removeItem(i)}>Remover</button>
+        <button type="button" class="btn-remove" on:click={() => removeItem(i)}>Remover</button>
       </div>
     {/each}
   </div>
   <div class="list-actions">
-    <button type="button" on:click={addItem}>Adicionar</button>
+    <button type="button" class="btn-add" on:click={addItem}>Adicionar</button>
   </div>
 </div>
 
 <style>
-  .list-root { display:block; }
-  .list-label { font-weight:600; margin-bottom:6px }
-  .item-row { display:flex; gap:8px; align-items:flex-end; margin-bottom:8px }
+  .list-root { display:block; font-family: var(--font-base); }
+  .list-label { font-weight:600; margin-bottom:6px; color: var(--color-text); font-size: var(--font-normal); }
+  .item-row { display:flex; gap: var(--size-gap); align-items:flex-end; margin-bottom:8px }
   .item-field { display:flex; flex-direction:column; min-width:120px }
-  .field-label { font-size:12px; color:#444; margin-bottom:4px }
-  input, textarea { width:100%; box-sizing:border-box }
+  .field-label { font-size: var(--font-small); color: var(--color-muted); margin-bottom:4px }
+  input, textarea {
+    width:100%; box-sizing:border-box;
+    padding: var(--input-padding);
+    border: var(--input-borderWidth) solid var(--input-borderColor);
+    border-radius: var(--radius-small);
+    background: var(--color-background);
+    color: var(--color-text);
+  }
   .list-actions { margin-top:8px }
+  .btn-remove { background: var(--color-surface); color: var(--color-text); padding: var(--button-padding); border-radius: var(--button-radius); border: 1px solid var(--input-borderColor) }
+  .btn-add { background: var(--button-bg); color: var(--button-color); padding: var(--button-padding); border-radius: var(--button-radius); border: none }
 </style>

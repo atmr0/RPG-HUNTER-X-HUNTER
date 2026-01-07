@@ -11,7 +11,13 @@
 </div>
 
 <style>
-  .computed-root { display:flex; flex-direction:column }
-  .field-label { font-size:12px; color:#444; margin-bottom:4px }
-  input { width:100%; box-sizing:border-box; background:#f3f3f3 }
+  .computed-root { display:flex; flex-direction:column; font-family: var(--font-base); }
+  .field-label { font-size: var(--font-small); color: var(--color-muted); margin-bottom:4px }
+  input {
+    width:100%; box-sizing:border-box; background: var(--color-surface);
+    padding: var(--input-padding);
+    border: var(--input-borderWidth) solid var(--input-borderColor);
+    border-radius: var(--radius-small);
+    color: var(--color-text);
+  }
 </style>
