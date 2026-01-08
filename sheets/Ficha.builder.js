@@ -17,7 +17,7 @@ b.addRow([
       b.select('nen_type').label('Tipo de Nen').options(['Não descoberto','Aprimorador','Emissor','Manipulador','Transmutador','Conjurador','Especialista']).colspan(1),
     ]
   ] }).background('blue'),
-  b.image('avatar').label('Avatar').width(100).height(100)
+  b.image('avatar').label('Avatar').width(79).height(70)
 ]);
 
 // Section title
