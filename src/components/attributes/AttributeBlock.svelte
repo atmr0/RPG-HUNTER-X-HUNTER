@@ -25,7 +25,7 @@
   $: computedFocus = focusColor || colorFromId(attr?.id || '');
 </script>
 
-<div class="attr-block-root" style="--color-attributeFocus: {computedFocus}">
+<div class="attr-block-root" style="--color-attributeFocus: {computedFocus}; background: {attr?.style?.background ?? 'transparent'}; border-color: {attr?.style?.borderColor ?? 'inherit'}">
   {#if attr && attr.label}
     <div class="attr-label">{attr.label}</div>
   {/if}

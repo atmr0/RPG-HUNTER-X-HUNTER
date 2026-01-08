@@ -32,7 +32,7 @@
   }
 </script>
 
-<div class="list-root">
+<div class="list-root" style="background: {cell?.style?.background ?? 'transparent'}; border-color: {cell?.style?.borderColor ?? 'inherit'}">
   <div class="list-label">{cell.label}</div>
   <div class="items">
     {#each items as item, i}

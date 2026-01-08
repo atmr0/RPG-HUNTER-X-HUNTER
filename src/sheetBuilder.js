@@ -101,7 +101,7 @@ export class CellBuilder {
   set(key, value) { this.cell[key] = value; return this; }
 
   // common sugar
-  background(color) { this.cell.style = { ...(this.cell.style || {}), background: color }; return this; }
+  background(color) { console.log(this); this.cell.style = { ...(this.cell.style || {}), background: color }; return this; }
   border(color) { this.cell.style = { ...(this.cell.style || {}), borderColor: color }; return this; }
   cssClass(name) { this.cell.class = [this.cell.class, name].filter(Boolean).join(' '); return this; }
   colspan(n) { this.cell.colspan = n; return this; }

@@ -14,5 +14,8 @@
     "svelte": "^4.0.0",
     "@sveltejs/vite-plugin-svelte": "^2.5.3"
   }
-  
+  ,
+  "dependencies": {
+    "expr-eval": "^2.0.2"
+  }
 }

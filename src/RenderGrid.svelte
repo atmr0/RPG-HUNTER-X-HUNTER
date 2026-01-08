@@ -9,6 +9,7 @@
   import Select from "./components/Select.svelte";
   import Separator from "./components/Separator.svelte";
   import List from "./components/List.svelte";
+  import { evaluateExpression } from './utils/compute.js';
 
   export let sheet;
   export let values = {};
@@ -31,37 +32,7 @@
   // computed values cache
   let computed = {};
 
-  function safeCompute(expr) {
-    if (!expr) return "";
-    let s = String(expr);
-    // find identifiers (variables)
-    const ids = s.match(/\b[A-Za-z_][A-Za-z0-9_]*\b/g) || [];
-    const uniq = [...new Set(ids)];
-    // allowed function patterns we will permit (keep names intact)
-    const allowedFuncs = ["Math", "floor", "ceil", "round", "abs"];
-    for (const id of uniq) {
-      if (allowedFuncs.includes(id)) continue; // don't replace function names
-      // replace identifier with numeric value (or 0)
-      const raw = values[id];
-      const num =
-        raw === undefined || raw === null || raw === "" ? 0 : Number(raw);
-      s = s.replace(
-        new RegExp("\\b" + id + "\\b", "g"),
-        String(isNaN(num) ? 0 : num)
-      );
-    }
-    // after replacing variables, allow only numbers, operators, dots, parentheses, commas and allowed Math functions
-    // temporarily remove allowed Math.function occurrences to check for stray letters
-    const tmp = s.replace(/Math\.(floor|ceil|round|abs)\(/g, "");
-    if (/[A-Za-z]/.test(tmp)) return null;
-    try {
-      // eslint-disable-next-line no-new-func
-      const fn = new Function("return (" + s + ")");
-      return fn();
-    } catch (e) {
-      return null;
-    }
-  }
+  // use evaluateExpression from utils to compute computed fields safely
 
   // recompute computed fields whenever `values` or `sheet` change
   $: if (sheet) {
@@ -70,7 +41,7 @@
       for (const cell of row || []) {
         if (!cell) continue;
         if (cell.type === "computed") {
-          const v = safeCompute(cell.expr);
+          const v = evaluateExpression(cell.expr, values);
           next[cell.id] = v;
           if (values[cell.id] !== v)
             dispatch("change", { id: cell.id, value: v });
@@ -80,7 +51,7 @@
             for (const subcell of subrow || []) {
               if (!subcell) continue;
               if (subcell.type === "computed") {
-                const v2 = safeCompute(subcell.expr);
+                const v2 = evaluateExpression(subcell.expr, values);
                 next[subcell.id] = v2;
                 if (values[subcell.id] !== v2)
                   dispatch("change", { id: subcell.id, value: v2 });
@@ -113,13 +84,13 @@
                   {values}
                   on:change={(e) => dispatch("change", e.detail)}
                 />
-              {:else if cell.type === "computed"}
-                <Computed
-                  {cell}
-                  id={cell.id}
-                  label={cell.label}
-                  value={computed[cell.id]}
-                />
+                  {:else if cell.type === "computed"}
+                    <Computed
+                      {cell}
+                      id={cell.id}
+                      label={cell.label}
+                      value={computed[cell.id]}
+                    />
               {:else if cell.type === "submatrix"}
                 <Submatrix
                   {cell}

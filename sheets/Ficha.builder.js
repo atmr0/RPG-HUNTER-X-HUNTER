@@ -13,7 +13,7 @@ b.addRow([
   b.submatrix({ id: 'nomes', cols: 3, rows: 2, colspan: 5, cells: [
     [ b.field('nome_personagem').fieldType('text').label('Nome do Personagem').colspan(3) ],
     [ 
-      b.field('nome_jogador').fieldType('text').label('Nome do Jogador').colspan(1).background('transparent'),
+      b.field('nome_jogador').fieldType('text').label('Nome do Jogador').colspan(1).background('red'),
       b.select('nen_type').label('Tipo de Nen').options(['Não descoberto','Aprimorador','Emissor','Manipulador','Transmutador','Conjurador','Especialista']).colspan(1),
     ]
   ] }).background('blue'),
